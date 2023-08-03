@@ -6,25 +6,26 @@
 #### vk: @debugged
 #### tg: @hogoshi
 
-### At this moment this lib - is the best library, that's why:
-#### • Easings Compatibility;
+### At this moment this lib - is the best library, why?
+#### • Ready-for-use Easings Compatibility;
 #### • Custom Easing Creation;
 #### • Safe Animations;
-#### • Animations doesn't depends on fps;
-#### • Bezier Compatibility (NEW);
-#### • Custom Bezier Creation (NEW);
-#### • Usage anywhere: Minecraft, Plugins, JavaFX, LWJGL, Sites, e.t.c.
+#### • Animation can depend on fps or no (your choice);
+#### • Ready-for-use Cubic Bezier Compatibility;
+#### • Custom Bezier Creation;
+#### • Usage anywhere: JavaFX, Swing, GameDev, OpenGL, Front-End probably, e.t.c.;
+#### • Awesome documentation and commentaries for each function and field.
 ### If you want to contribute something to project, you are welcome!
 ### Thanks all ppl whose stars repo, that motivates me <3
 
 # Creds
-### Main Logic: 
+### Animate Logic from 
 https://github.com/cristalix-arcades/cristalix-client-sdk/blob/stable/ui-engine/src/main/kotlin/ru/cristalix/uiengine/eventloop/Animation.kt
 
-### Docs:
+### Docs
 https://hogoshi.gitbook.io/animations
 
-# Cubic Bezier builder:
+# Cubic Bezier builder
 https://cubic-bezier.com/
 
 # Thank u for reading!
