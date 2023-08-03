@@ -2,7 +2,7 @@
 
 #### at this moment lib is abandoned. if you want to contribute smthng - you're welcome!
 #### if you have some ideas what i can add to this prob shitty lib - dm me:
-#### dc: ilusm#4869
+#### dc: hogoshi
 #### vk: @debugged
 #### tg: @hogoshi
 
