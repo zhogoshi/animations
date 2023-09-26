@@ -29,3 +29,7 @@ https://hogoshi.gitbook.io/animations
 https://cubic-bezier.com/
 
 # Thank u for reading!
+
+# Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=zhogoshi/animations&type=Date)](https://star-history.com/#zhogoshi/animations&Date)
