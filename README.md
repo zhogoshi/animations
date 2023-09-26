@@ -1,5 +1,13 @@
 # Animations
 
+<a href="https://star-history.com/#zhogoshi/animations&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=zhogoshi/animations&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=zhogoshi/animations&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=zhogoshi/animations&type=Date" />
+  </picture>
+</a>
+
 #### at this moment lib is abandoned. if you want to contribute smthng - you're welcome!
 #### if you have some ideas what i can add to this prob shitty lib - dm me:
 #### dc: hogoshi
@@ -29,7 +37,3 @@ https://hogoshi.gitbook.io/animations
 https://cubic-bezier.com/
 
 # Thank u for reading!
-
-# Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=zhogoshi/animations&type=Date)](https://star-history.com/#zhogoshi/animations&Date)
