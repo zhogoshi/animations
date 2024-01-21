@@ -11,7 +11,7 @@
 #### at this moment lib is abandoned. if you want to contribute smthng - you're welcome!
 #### if you have some ideas what i can add to this prob shitty lib - dm me:
 #### dc: hogoshi
-#### vk: @debugged
+#### vk: @hogoshi
 #### tg: @hogoshi
 
 ### At this moment this lib - is the best library, why?
