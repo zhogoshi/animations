@@ -43,14 +43,16 @@ public class CubicBezier extends AbstractBezier {
         Point firstPoint = extractPoint(splitted[0] + "," + splitted[1]);
         Point secondPoint = extractPoint(splitted[2] + "," + splitted[3]);
 
-        if (firstPoint != null) this.firstPoint = firstPoint; else this.firstPoint = new Point(0.0, 0.0);
-        if (secondPoint != null) this.secondPoint = secondPoint; else this.secondPoint = new Point(1.0, 1.0);
+        if (firstPoint != null) this.firstPoint = firstPoint;
+        else this.firstPoint = new Point(0.0, 0.0);
+        if (secondPoint != null) this.secondPoint = secondPoint;
+        else this.secondPoint = new Point(1.0, 1.0);
 
         setupPoints();
     }
 
     private void setupPoints() {
-        if(firstPoint == null || secondPoint == null) return;
+        if (firstPoint == null || secondPoint == null) return;
         points.clear();
 
         double increment = 1.0 / 30.0;
