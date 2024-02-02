@@ -8,7 +8,7 @@
   </picture>
 </a>
 
-#### at this moment lib is (probably) abandoned. if you want to contribute smthng - you're welcome!
+#### at this moment lib is abandoned. if you want to contribute smthng - you're welcome!
 
 #### if you have some ideas what i can add to this prob shitty lib - dm me:
 
@@ -18,21 +18,69 @@
 
 ### Kotlin animations verison
 
-#### wait...
+```groovy
+repositories {
+    maven("https://jitpack.io")
+}
+
+dependencies {
+    implementation("com.github.zhogoshi.animations:animations-kotlin:5.4")
+}
+```
 
 ### Java animations verison
 
-#### wait...
+```groovy
+repositories {
+    maven("https://jitpack.io")
+}
+
+dependencies {
+    implementation("com.github.zhogoshi.animations:animations-java:5.4")
+}
+```
 
 ## Maven
 
 ### Kotlin animations verison
 
-#### wait...
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+
+<dependencies>
+    <dependency>
+        <groupId>com.github.zhogoshi.animations</groupId>
+        <artifactId>animations-kotlin</artifactId>
+        <version>5.4</version>
+    </dependency>
+</dependencies>
+```
 
 ### Java animations verison
 
-#### wait...
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+
+<dependencies>
+    <dependency>
+        <groupId>com.github.zhogoshi.animations</groupId>
+        <artifactId>animations-java</artifactId>
+        <version>5.4</version>
+    </dependency>
+</dependencies>
+```
 
 ### so, this lib - is the best animation library, why?
 
