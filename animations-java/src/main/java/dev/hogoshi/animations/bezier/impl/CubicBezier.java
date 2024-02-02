@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -91,9 +92,9 @@ public class CubicBezier extends AbstractBezier {
         return res;
     }
 
-    private Map.Entry<Point, Point> getBoundingPoints(double x) {
+    private AbstractMap.SimpleEntry<Point, Point> getBoundingPoints(double x) {
         List<Point> points = getPoints();
-        if (points.isEmpty()) return Map.entry(new Point(0.0, 0.0), new Point(0.0, 0.0));
+        if (points.isEmpty()) return new AbstractMap.SimpleEntry<>(new Point(0.0, 0.0), new Point(0.0, 0.0));
 
         Point lowerPoint = points.stream().findFirst().get();
         Point upperPoint = points.get(points.size() - 1);
@@ -110,7 +111,7 @@ public class CubicBezier extends AbstractBezier {
         if (upperPoint.getX() < x) upperPoint = lowerPoint;
         if (lowerPoint.getX() > x) lowerPoint = upperPoint;
 
-        return Map.entry(lowerPoint, upperPoint);
+        return new AbstractMap.SimpleEntry<>(lowerPoint, upperPoint);
     }
 
     @Override

@@ -1,4 +1,5 @@
 plugins {
+    `java-library`
     `maven-publish`
     signing
 }
@@ -6,6 +7,11 @@ plugins {
 subprojects {
     apply("plugin" to "java")
     apply("plugin" to "maven-publish")
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_16
+        targetCompatibility = JavaVersion.VERSION_16
+    }
 
     publishing {
         publications {
