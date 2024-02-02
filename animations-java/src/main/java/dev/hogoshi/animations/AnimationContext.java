@@ -99,11 +99,11 @@ public class AnimationContext {
      * Call this if u want to make 1-line instead of calling #animate(name, ...)
      *
      * @param duration animation duration
-     * @param consumer this consumer will invoke after all setting fields
+     * @param runnable this consumer will invoke after all setting fields
      * @return Current AnimationContext
      */
-    public AnimationContext animate(double duration, Runnable consumer) {
-        return animate(duration, easing, consumer);
+    public AnimationContext animate(double duration, Runnable runnable) {
+        return animate(duration, easing, runnable);
     }
 
     /**
@@ -111,11 +111,11 @@ public class AnimationContext {
      *
      * @param duration animation duration
      * @param easing   easing/bezier
-     * @param consumer this consumer will invoke after all setting fields
+     * @param runnable this consumer will invoke after all setting fields
      * @return Current AnimationContext
      */
-    public AnimationContext animate(double duration, Easing easing, Runnable consumer) {
-        return animate(duration, easing, false, consumer);
+    public AnimationContext animate(double duration, Easing easing, Runnable runnable) {
+        return animate(duration, easing, false, runnable);
     }
 
     /**
@@ -123,15 +123,15 @@ public class AnimationContext {
      *
      * @param duration animation duration
      * @param easing   easing/bezier
-     * @param consumer this consumer will invoke after all setting fields
+     * @param runnable this runnable will invoke after all setting fields
      * @param debug    debugging helper which will print all #animation calls
      * @return Current AnimationContext
      */
-    private AnimationContext animate(double duration, Easing easing, boolean debug, Runnable consumer) {
+    private AnimationContext animate(double duration, Easing easing, boolean debug, Runnable runnable) {
         setDuration(duration);
         setEasing(easing);
         setDebug(debug);
-        consumer.run();
+        runnable.run();
         return this;
     }
 
