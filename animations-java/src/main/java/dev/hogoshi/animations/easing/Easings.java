@@ -1,36 +1,44 @@
-package ru.hogoshi.util;
+package dev.hogoshi.animations.easing;
 
 import static java.lang.Math.*;
 
-public final class Easings {
+/**
+ * All pre-default easings, you can create your own or use CubicBezier
+ *
+ * @author hogoshi
+ */
+public class Easings {
 
     public static final double c1 = 1.70158D;
     public static final double c2 = c1 * 1.525D;
+    public static final Easing BACK_BOTH = value -> {
+        if (value < 0.5D) {
+            return pow(2.0D * value, 2.0D) * ((c2 + 1.0D) * 2.0D * value - c2) / 2.0D;
+        } else {
+            return (pow(2.0D * value - 2.0D, 2.0D) * ((c2 + 1.0D) * (value * 2.0D - 2.0D) + c2) + 2.0D) / 2.0D;
+        }
+    };
     public static final double c3 = c1 + 1.D;
+    public static final Easing BACK_IN = value -> c3 * pow(value, 3.0D) - c1 * pow(value, 2.0D);
+    public static final Easing BACK_OUT = value -> 1.0D + c3 * pow(value - 1.0D, 3.0D) + c1 * pow(value - 1.0D, 2.0D);
     public static final double c4 = 2.0D * PI / 3.D;
     public static final double c5 = 2.0D * PI / 4.5D;
-
-    public static final Easing NONE = value -> value;
+    public static final Easing LINEAR = value -> value;
     public static final Easing QUAD_IN = powIn(2);
     public static final Easing QUAD_OUT = powOut(2);
     public static final Easing QUAD_BOTH = powBoth(2);
-
     public static final Easing CUBIC_IN = powIn(3);
     public static final Easing CUBIC_OUT = powOut(3);
     public static final Easing CUBIC_BOTH = powBoth(3);
-
     public static final Easing QUART_IN = powIn(4);
     public static final Easing QUART_OUT = powOut(4);
     public static final Easing QUART_BOTH = powBoth(4);
-
     public static final Easing QUINT_IN = powIn(5);
     public static final Easing QUINT_OUT = powOut(5);
     public static final Easing QUINT_BOTH = powBoth(5);
-
     public static final Easing SINE_IN = value -> 1.0D - cos(value * PI / 2.0D);
     public static final Easing SINE_OUT = value -> sin(value * PI / 2.0D);
     public static final Easing SINE_BOTH = value -> -(cos(PI * value) - 1.0D) / 2.0D;
-
     public static final Easing CIRC_IN = value -> 1.0D - sqrt(1.0D - pow(value, 2.0D));
     public static final Easing CIRC_OUT = value -> sqrt(1.0D - pow(value - 1.0D, 2));
     public static final Easing CIRC_BOTH = value -> {
@@ -40,7 +48,6 @@ public final class Easings {
             return (sqrt(1.0D - pow(-2.0D * value + 2.0D, 2.0D)) + 1.0D) / 2.0D;
         }
     };
-
     public static final Easing ELASTIC_IN = value -> {
         if (value == 0.0D || value == 1.0D) {
             return value;
@@ -85,15 +92,6 @@ public final class Easings {
             return pow(2.0D, 20.0D * value - 10.0D) / 2.0D;
         } else {
             return (2.0D - pow(2.0D, -20.0D * value + 10)) / 2.0D;
-        }
-    };
-    public static final Easing BACK_IN = value -> c3 * pow(value, 3.0D) - c1 * pow(value, 2.0D);
-    public static final Easing BACK_OUT = value -> 1.0D + c3 * pow(value - 1.0D, 3.0D) + c1 * pow(value - 1.0D, 2.0D);
-    public static final Easing BACK_BOTH = value -> {
-        if (value < 0.5D) {
-            return pow(2.0D * value, 2.0D) * ((c2 + 1.0D) * 2.0D * value - c2) / 2.0D;
-        } else {
-            return (pow(2.0D * value - 2.0D, 2.0D) * ((c2 + 1.0D) * (value * 2.0D - 2.0D) + c2) + 2.0D) / 2.0D;
         }
     };
     public static final Easing BOUNCE_OUT = x -> {
@@ -148,4 +146,3 @@ public final class Easings {
     }
 
 }
-
