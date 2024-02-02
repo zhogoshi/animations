@@ -4,16 +4,15 @@ import dev.hogoshi.animations.animation.AbstractAnimation;
 import dev.hogoshi.animations.animation.ContextAnimation;
 import dev.hogoshi.animations.easing.Easing;
 import dev.hogoshi.animations.easing.Easings;
-import lombok.Data;
 
 import java.util.LinkedList;
+import java.util.Optional;
 
 /**
  * Context for animating a lot of animations in 1 class
  *
  * @author hogoshi
  */
-@Data
 public class AnimationContext {
 
     /**
@@ -40,9 +39,9 @@ public class AnimationContext {
      * @return New or already added to animations list ContextAnimation by name with ignoring case
      */
     public ContextAnimation getAnimation(String name) {
-        var optional = animations.stream().filter((it) -> it.getName().equalsIgnoreCase(name)).findFirst();
+        Optional<ContextAnimation> optional = animations.stream().filter((it) -> it.getName().equalsIgnoreCase(name)).findFirst();
         ContextAnimation animation;
-        if (optional.isEmpty()) {
+        if (!optional.isPresent()) {
             animation = new ContextAnimation(name, this);
             animations.add(animation);
         } else {
@@ -143,6 +142,34 @@ public class AnimationContext {
     public boolean update() {
         getAnimations().forEach(ContextAnimation::update);
         return getAnimations().stream().anyMatch(AbstractAnimation::isAlive);
+    }
+
+    public void setDuration(double duration) {
+        this.duration = duration;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    public void setEasing(Easing easing) {
+        this.easing = easing;
+    }
+
+    public double getDuration() {
+        return duration;
+    }
+
+    public LinkedList<ContextAnimation> getAnimations() {
+        return animations;
+    }
+
+    public Easing getEasing() {
+        return easing;
+    }
+
+    public boolean isDebug() {
+        return debug;
     }
 
 }

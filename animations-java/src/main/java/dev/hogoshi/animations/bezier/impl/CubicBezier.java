@@ -2,10 +2,6 @@ package dev.hogoshi.animations.bezier.impl;
 
 import dev.hogoshi.animations.bezier.AbstractBezier;
 import dev.hogoshi.animations.bezier.Point;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -16,20 +12,21 @@ import java.util.Map;
  * Just realization for AbstractBezier.
  * Needed for custom easings without using math.
  * You'll just need to go to cubic-bezier.com,
- * Move some points and test how it'll interpolates.
+ * Move some points and test how it'll interpolate.
  * If u need this bezier, you can use default constructor CubicBezier(firstPoint, secondPoint).
  * Or you can use CubicBezier(str), parsing str from cubic-bezier.com, just press on save to library at the bottom of bezier.
  *
  * @author hogoshi
  */
-@RequiredArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@Data
-@Builder
 public class CubicBezier extends AbstractBezier {
 
     private final Point firstPoint;
     private final Point secondPoint;
+
+    public CubicBezier(Point firstPoint, Point secondPoint) {
+        this.firstPoint = firstPoint;
+        this.secondPoint = secondPoint;
+    }
 
     public CubicBezier(String str) {
         String[] splitted = str.split(",");
@@ -129,6 +126,14 @@ public class CubicBezier extends AbstractBezier {
             double interpolatedY = ((upperPoint.getY() - lowerPoint.getY()) / (upperPoint.getX() - lowerPoint.getX())) * (time - lowerPoint.getX()) + lowerPoint.getY();
             return 1.0 - interpolatedY;
         }
+    }
+
+    public Point getFirstPoint() {
+        return firstPoint;
+    }
+
+    public Point getSecondPoint() {
+        return secondPoint;
     }
 
 }

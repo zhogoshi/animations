@@ -1,14 +1,12 @@
 package dev.hogoshi.animations.animation;
 
 import dev.hogoshi.animations.easing.Easing;
-import lombok.Data;
 
 /**
  * Animation basic abstraction
  *
  * @author hogoshi
  */
-@Data
 public abstract class AbstractAnimation {
 
     private double value;
@@ -63,6 +61,62 @@ public abstract class AbstractAnimation {
      */
     public double interpolate(double start, double end, double pct) {
         return start + (end - start) * pct;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public long getStart() {
+        return start;
+    }
+
+    public void setStart(long start) {
+        this.start = start;
+    }
+
+    public double getDuration() {
+        return duration;
+    }
+
+    public void setDuration(double duration) {
+        this.duration = duration;
+    }
+
+    public double getFrom() {
+        return from;
+    }
+
+    public void setFrom(double from) {
+        this.from = from;
+    }
+
+    public double getTo() {
+        return to;
+    }
+
+    public void setTo(double to) {
+        this.to = to;
+    }
+
+    public Easing getEasing() {
+        return easing;
+    }
+
+    public void setEasing(Easing easing) {
+        this.easing = easing;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 
 }

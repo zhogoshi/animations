@@ -1,13 +1,10 @@
 package dev.hogoshi.animations.bezier;
 
-import lombok.Data;
-
 /**
  * Data class which allows to easily manipulate with 2D points
  *
  * @author hogoshi
  */
-@Data
 public class Point {
 
     private double x;
@@ -101,6 +98,22 @@ public class Point {
 
     public Point set(Point point) {
         return set(point.getX(), point.getY());
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
     }
 
 }
