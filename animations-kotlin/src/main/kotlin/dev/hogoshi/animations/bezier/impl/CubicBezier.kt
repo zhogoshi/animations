@@ -14,26 +14,38 @@ import kotlin.math.pow
  * @author hogoshi
  */
 class CubicBezier(
-    private var firstPoint: Point? = null,
-    private var secondPoint: Point? = null
+    private var firstPoint: Point,
+    private var secondPoint: Point
 ) : AbstractBezier() {
+
+    private val points = arrayListOf<Point>()
+
+    constructor() : this(Point(0.0, 0.0), Point(1.0, 1.0))
 
     constructor(
         str: String
     ) : this() {
-        val splitted = str.split(",")
+        val splitted = str.replace(" ", "").split(",")
         if (splitted.size != 4)
-            throw IllegalArgumentException("Couldn't parse $str, please follow this format: x1,y1,x2,y2")
+            throw IllegalArgumentException("Couldn't parse $str, please follow this format: x1, y1, x2, y2")
 
         this.firstPoint = extractPoint(splitted[0] + "," + splitted[1])
         this.secondPoint = extractPoint(splitted[2] + "," + splitted[3])
     }
 
-    private fun extractPoint(str: String): Point? {
-        if (!str.contains(",")) return null
+    constructor(bezier: CubicBezier) : this(bezier.firstPoint, bezier.secondPoint)
+
+    init {
+        setupPoints()
+    }
+
+    fun copy() : CubicBezier = CubicBezier(this)
+
+    private fun extractPoint(str: String): Point {
+        if (!str.contains(",")) throw IllegalArgumentException("Couldn't parse $str, please follow this format: x, y")
 
         val splitted = str.split(",")
-        if (splitted.size <= 1) return null
+        if (splitted.size <= 1) throw IllegalArgumentException("Couldn't parse $str, please follow this format: x, y")
 
         val first = splitted[0]
         val second = splitted[1]
@@ -44,16 +56,28 @@ class CubicBezier(
             val firstDouble = first.fixedTrim().toDouble()
             val secondDouble = second.fixedTrim().toDouble()
             return Point(firstDouble, secondDouble)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            throw e
         }
-        return null;
+    }
+
+    private fun setupPoints() {
+        points.clear()
+
+        val increment = 1.0 / 30.0
+        var t = 0.0
+        while (t <= 1.0) {
+            val point = getPoint(t)
+            points.add(Point(point.x, 1.0).subtract(0.0, point.y))
+            t += increment
+        }
+
+        points.add(Point(1.0, 0.0))
     }
 
     private fun getPoint(time: Double): Point {
-        if (firstPoint == null || secondPoint == null) throw NullPointerException("firstPoint or secondPoint is null")
-
-        val controlPoint1 = firstPoint!!.copy()
-        val controlPoint2 = secondPoint!!.copy()
+        val controlPoint1 = firstPoint.copy()
+        val controlPoint2 = secondPoint.copy()
 
         val oneMinusT = 1.0 - time
         return Point(
@@ -68,24 +92,7 @@ class CubicBezier(
         )
     }
 
-    private fun getPoints(): List<Point> {
-        val res = arrayListOf<Point>()
-
-        val increment = 1.0 / 30.0
-        var t = 0.0
-        while (t <= 1.0) {
-            val point = getPoint(t)
-            res.add(Point(point.x, 1.0).subtract(0.0, point.y))
-            t += increment
-        }
-
-        res.add(Point(1.0, 0.0))
-
-        return res
-    }
-
     private fun getBoundingPoints(x: Double): Pair<Point, Point> {
-        val points = getPoints()
         if (points.isEmpty()) return Point(0.0, 0.0) to Point(0.0, 0.0)
 
         var lowerPoint = points.first()
@@ -107,8 +114,6 @@ class CubicBezier(
     }
 
     override fun ease(time: Double): Double {
-        if (firstPoint == null || secondPoint == null) return 0.0
-
         val (lowerPoint, upperPoint) = getBoundingPoints(time)
 
         if (lowerPoint == upperPoint) {

@@ -18,7 +18,7 @@ subprojects {
             create<MavenPublication>("maven") {
                 groupId = "dev.hogoshi.animations"
                 artifactId = this@subprojects.name
-                version = "5.2"
+                version = "5.3"
 
                 from(components["java"])
             }

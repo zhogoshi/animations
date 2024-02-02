@@ -3,10 +3,7 @@ package dev.hogoshi.animations.bezier.impl;
 import dev.hogoshi.animations.bezier.AbstractBezier;
 import dev.hogoshi.animations.bezier.Point;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Just realization for AbstractBezier.
@@ -17,12 +14,15 @@ import java.util.Map;
  * Or you can use CubicBezier(str), parsing str from cubic-bezier.com, just press on save to library at the bottom of bezier.
  */
 public class CubicBezier extends AbstractBezier {
-    private Point firstPoint;
-    private Point secondPoint;
+    private final Point firstPoint;
+    private final Point secondPoint;
+    private final List<Point> points = new ArrayList<>();
 
     public CubicBezier() {
         this.firstPoint = new Point(0, 0);
         this.secondPoint = new Point(1, 1);
+
+        setupPoints();
     }
 
     public CubicBezier(Point firstPoint, Point secondPoint) {
@@ -30,17 +30,38 @@ public class CubicBezier extends AbstractBezier {
         this.secondPoint = secondPoint;
     }
 
+    public CubicBezier(CubicBezier bezier) {
+        this.firstPoint = bezier.getFirstPoint();
+        this.secondPoint = bezier.getSecondPoint();
+    }
+
     public CubicBezier(String str) {
-        this();
-        String[] splitted = str.split(",");
+        String[] splitted = str.replace(" ", "").split(",");
         if (splitted.length != 4)
             throw new IllegalArgumentException("Couldn't parse " + str + ", please follow this format: x1,y1,x2,y2");
 
         Point firstPoint = extractPoint(splitted[0] + "," + splitted[1]);
         Point secondPoint = extractPoint(splitted[2] + "," + splitted[3]);
 
-        if (firstPoint != null) this.firstPoint = firstPoint;
-        if (secondPoint != null) this.secondPoint = secondPoint;
+        if (firstPoint != null) this.firstPoint = firstPoint; else this.firstPoint = new Point(0.0, 0.0);
+        if (secondPoint != null) this.secondPoint = secondPoint; else this.secondPoint = new Point(1.0, 1.0);
+
+        setupPoints();
+    }
+
+    private void setupPoints() {
+        if(firstPoint == null || secondPoint == null) return;
+        points.clear();
+
+        double increment = 1.0 / 30.0;
+        double t = 0.0;
+        while (t <= 1.0) {
+            Point point = getPoint(t);
+            points.add(new Point(point.x, 1.0).subtract(0.0, point.y));
+            t += increment;
+        }
+
+        points.add(new Point(1.0, 0.0));
     }
 
     private Point extractPoint(String str) {
@@ -81,23 +102,7 @@ public class CubicBezier extends AbstractBezier {
         );
     }
 
-    private List<Point> getPoints() {
-        List<Point> res = new ArrayList<>();
-
-        double increment = 1.0 / 30.0;
-        double t = 0.0;
-        while (t <= 1.0) {
-            Point point = getPoint(t);
-            res.add(new Point(point.x, 1.0).subtract(0.0, point.y));
-            t += increment;
-        }
-
-        res.add(new Point(1.0, 0.0));
-        return res;
-    }
-
     private AbstractMap.Entry<Point, Point> getBoundingPoints(double x) {
-        List<Point> points = getPoints();
         if (points.isEmpty()) return new AbstractMap.SimpleEntry<>(new Point(0.0, 0.0), new Point(0.0, 0.0));
 
         Point lowerPoint = points.get(0);
@@ -136,20 +141,20 @@ public class CubicBezier extends AbstractBezier {
         }
     }
 
-    public void setFirstPoint(Point firstPoint) {
-        this.firstPoint = firstPoint;
-    }
-
-    public void setSecondPoint(Point secondPoint) {
-        this.secondPoint = secondPoint;
-    }
-
     public Point getFirstPoint() {
-        return firstPoint;
+        return firstPoint.copy();
     }
 
     public Point getSecondPoint() {
-        return secondPoint;
+        return secondPoint.copy();
+    }
+
+    public List<Point> getPoints() {
+        return Collections.unmodifiableList(points);
+    }
+
+    public CubicBezier copy() {
+        return new CubicBezier(this);
     }
 
 }
