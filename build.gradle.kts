@@ -1,17 +1,25 @@
 plugins {
     id("java")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
     id("maven-publish")
     kotlin("jvm") version "1.8.21"
 }
 
 repositories {
     mavenCentral()
+    maven {
+        setUrl("https://jitpack.io")
+    }
 }
 
 allprojects {
     group = "dev.hogoshi.animations"
     version = "5.0"
+
+    repositories {
+        maven {
+            setUrl("https://jitpack.io")
+        }
+    }
 }
 
 subprojects {
@@ -19,11 +27,15 @@ subprojects {
         "animations-java" -> apply(plugin = "java")
         "animations-kotlin" -> apply(plugin = "org.jetbrains.kotlin.jvm")
     }
-    apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "maven-publish")
 
     repositories {
         mavenCentral()
+    }
+
+    java {
+        withSourcesJar()
+        withJavadocJar()
     }
 
     dependencies {
