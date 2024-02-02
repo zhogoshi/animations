@@ -2,27 +2,25 @@ package dev.hogoshi.animations.bezier;
 
 /**
  * Data class which allows to easily manipulate with 2D points
- *
- * @author hogoshi
  */
 public class Point {
 
-    private double x;
-    private double y;
+    public double x;
+    public double y;
 
     public Point() {
-        setX(0);
-        setY(0);
+        this.x = 0.0;
+        this.y = 0.0;
     }
 
     public Point(double x, double y) {
-        setX(x);
-        setY(y);
+        this.x = x;
+        this.y = y;
     }
 
     public Point(Point point) {
-        setX(point.getX());
-        setY(point.getY());
+        this.x = point.x;
+        this.y = point.y;
     }
 
     public Point copy() {
@@ -30,9 +28,8 @@ public class Point {
     }
 
     public Point multiply(double x, double y) {
-        setX(getX() * x);
-        setY(getY() * y);
-
+        this.x *= x;
+        this.y *= y;
         return this;
     }
 
@@ -41,18 +38,17 @@ public class Point {
     }
 
     public Point multiply(Point point) {
-        return multiply(point.getX(), point.getY());
+        return multiply(point.x, point.y);
     }
 
     public Point add(double x, double y) {
-        setX(getX() + x);
-        setY(getY() + y);
-
+        this.x += x;
+        this.y += y;
         return this;
     }
 
     public Point add(Point point) {
-        return add(point.getX(), point.getY());
+        return add(point.x, point.y);
     }
 
     public Point add(double addition) {
@@ -60,14 +56,13 @@ public class Point {
     }
 
     public Point subtract(double x, double y) {
-        setX(getX() - x);
-        setY(getY() - y);
-
+        this.x -= x;
+        this.y -= y;
         return this;
     }
 
     public Point subtract(Point point) {
-        return add(point.getX(), point.getY());
+        return add(point.x, point.y);
     }
 
     public Point subtract(double subtraction) {
@@ -75,14 +70,13 @@ public class Point {
     }
 
     public Point divide(double x, double y) {
-        setX(getX() / x);
-        setY(getY() / y);
-
+        this.x /= x;
+        this.y /= y;
         return this;
     }
 
     public Point divide(Point point) {
-        return divide(point.getX(), point.getY());
+        return divide(point.x, point.y);
     }
 
     public Point divide(double division) {
@@ -90,30 +84,12 @@ public class Point {
     }
 
     public Point set(double x, double y) {
-        setX(x);
-        setY(y);
-
+        this.x = x;
+        this.y = y;
         return this;
     }
 
     public Point set(Point point) {
-        return set(point.getX(), point.getY());
+        return set(point.x, point.y);
     }
-
-    public double getX() {
-        return x;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
 }

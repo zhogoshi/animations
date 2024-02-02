@@ -12,16 +12,18 @@ import java.util.Map;
  * Just realization for AbstractBezier.
  * Needed for custom easings without using math.
  * You'll just need to go to cubic-bezier.com,
- * Move some points and test how it'll interpolate.
+ * Move some points and test how it'll interpolates.
  * If u need this bezier, you can use default constructor CubicBezier(firstPoint, secondPoint).
  * Or you can use CubicBezier(str), parsing str from cubic-bezier.com, just press on save to library at the bottom of bezier.
- *
- * @author hogoshi
  */
 public class CubicBezier extends AbstractBezier {
+    private Point firstPoint;
+    private Point secondPoint;
 
-    private final Point firstPoint;
-    private final Point secondPoint;
+    public CubicBezier() {
+        this.firstPoint = new Point(0, 0);
+        this.secondPoint = new Point(1, 1);
+    }
 
     public CubicBezier(Point firstPoint, Point secondPoint) {
         this.firstPoint = firstPoint;
@@ -29,26 +31,32 @@ public class CubicBezier extends AbstractBezier {
     }
 
     public CubicBezier(String str) {
+        this();
         String[] splitted = str.split(",");
         if (splitted.length != 4)
             throw new IllegalArgumentException("Couldn't parse " + str + ", please follow this format: x1,y1,x2,y2");
 
-        this.firstPoint = extractPoint(splitted[0] + "," + splitted[1]);
-        this.secondPoint = extractPoint(splitted[2] + "," + splitted[3]);
+        Point firstPoint = extractPoint(splitted[0] + "," + splitted[1]);
+        Point secondPoint = extractPoint(splitted[2] + "," + splitted[3]);
+
+        if (firstPoint != null) this.firstPoint = firstPoint;
+        if (secondPoint != null) this.secondPoint = secondPoint;
     }
 
     private Point extractPoint(String str) {
         if (!str.contains(",")) return null;
 
         String[] splitted = str.split(",");
-        if (splitted.length != 2) return null;
+        if (splitted.length <= 1) return null;
 
-        String x = splitted[0];
-        String y = splitted[1];
+        String first = splitted[0];
+        String second = splitted[1];
 
         try {
-            return new Point((int) (Double.parseDouble(x.trim().replace("\uFEFF", ""))), (int) (Double.parseDouble(y.trim().replace("\uFEFF", ""))));
-        } catch (NumberFormatException e) {
+            double firstDouble = Double.parseDouble(first.trim().replace("\uFEFF", ""));
+            double secondDouble = Double.parseDouble(second.trim().replace("\uFEFF", ""));
+            return new Point(firstDouble, secondDouble);
+        } catch (Exception e) {
             return null;
         }
     }
@@ -62,14 +70,14 @@ public class CubicBezier extends AbstractBezier {
 
         double oneMinusT = 1.0 - time;
         return new Point(
-                getStart().getX() * Math.pow(oneMinusT, 3) +
-                        3 * controlPoint1.getX() * time * Math.pow(oneMinusT, 2) +
-                        3 * controlPoint2.getX() * Math.pow(time, 2) * oneMinusT +
-                        getEnd().getX() * Math.pow(time, 3),
-                getStart().getY() * Math.pow(oneMinusT, 3) +
-                        3 * controlPoint1.getY() * time * Math.pow(oneMinusT, 2) +
-                        3 * controlPoint2.getY() * Math.pow(time, 2) * oneMinusT +
-                        getEnd().getY() * Math.pow(time, 3)
+                start.x * Math.pow(oneMinusT, 3) +
+                        3 * controlPoint1.x * time * Math.pow(oneMinusT, 2) +
+                        3 * controlPoint2.x * Math.pow(time, 2) * oneMinusT +
+                        end.x * Math.pow(time, 3),
+                start.y * Math.pow(oneMinusT, 3) +
+                        3 * controlPoint1.y * time * Math.pow(oneMinusT, 2) +
+                        3 * controlPoint2.y * Math.pow(time, 2) * oneMinusT +
+                        end.y * Math.pow(time, 3)
         );
     }
 
@@ -80,33 +88,32 @@ public class CubicBezier extends AbstractBezier {
         double t = 0.0;
         while (t <= 1.0) {
             Point point = getPoint(t);
-            res.add(new Point(point.getX(), 1.0).subtract(0.0, point.getY()));
+            res.add(new Point(point.x, 1.0).subtract(0.0, point.y));
             t += increment;
         }
 
         res.add(new Point(1.0, 0.0));
-
         return res;
     }
 
-    private AbstractMap.SimpleEntry<Point, Point> getBoundingPoints(double x) {
+    private AbstractMap.Entry<Point, Point> getBoundingPoints(double x) {
         List<Point> points = getPoints();
         if (points.isEmpty()) return new AbstractMap.SimpleEntry<>(new Point(0.0, 0.0), new Point(0.0, 0.0));
 
-        Point lowerPoint = points.stream().findFirst().get();
+        Point lowerPoint = points.get(0);
         Point upperPoint = points.get(points.size() - 1);
 
         for (Point point : points) {
-            if (point.getX() < x)
+            if (point.x < x) {
                 lowerPoint = point;
-            else if (point.getX() > x && upperPoint.getX() >= point.getX()) {
+            } else if (point.x > x && upperPoint.x >= point.x) {
                 upperPoint = point;
                 break;
             }
         }
 
-        if (upperPoint.getX() < x) upperPoint = lowerPoint;
-        if (lowerPoint.getX() > x) lowerPoint = upperPoint;
+        if (upperPoint.x < x) upperPoint = lowerPoint;
+        if (lowerPoint.x > x) lowerPoint = upperPoint;
 
         return new AbstractMap.SimpleEntry<>(lowerPoint, upperPoint);
     }
@@ -120,12 +127,21 @@ public class CubicBezier extends AbstractBezier {
         Point lowerPoint = points.getKey();
         Point upperPoint = points.getValue();
 
-        if (lowerPoint == upperPoint) {
-            return 1.0 - lowerPoint.getY();
+        if (lowerPoint.equals(upperPoint)) {
+            return 1.0 - lowerPoint.y;
         } else {
-            double interpolatedY = ((upperPoint.getY() - lowerPoint.getY()) / (upperPoint.getX() - lowerPoint.getX())) * (time - lowerPoint.getX()) + lowerPoint.getY();
+            double interpolatedY =
+                    ((upperPoint.y - lowerPoint.y) / (upperPoint.x - lowerPoint.x)) * (time - lowerPoint.x) + lowerPoint.y;
             return 1.0 - interpolatedY;
         }
+    }
+
+    public void setFirstPoint(Point firstPoint) {
+        this.firstPoint = firstPoint;
+    }
+
+    public void setSecondPoint(Point secondPoint) {
+        this.secondPoint = secondPoint;
     }
 
     public Point getFirstPoint() {
