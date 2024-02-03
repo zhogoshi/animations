@@ -57,7 +57,7 @@ dependencies {
     <dependency>
         <groupId>com.github.zhogoshi.animations</groupId>
         <artifactId>animations-kotlin</artifactId>
-        <version>5.4</version>
+        <version>5.5</version>
     </dependency>
 </dependencies>
 ```
@@ -77,7 +77,7 @@ dependencies {
     <dependency>
         <groupId>com.github.zhogoshi.animations</groupId>
         <artifactId>animations-java</artifactId>
-        <version>5.4</version>
+        <version>5.5</version>
     </dependency>
 </dependencies>
 ```
