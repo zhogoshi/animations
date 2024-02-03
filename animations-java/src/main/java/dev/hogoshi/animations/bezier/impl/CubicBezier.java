@@ -17,43 +17,39 @@ public class CubicBezier extends AbstractBezier {
     private final Point firstPoint;
     private final Point secondPoint;
     private final List<Point> points = new ArrayList<>();
-    private int pointsAmount = 30;
+    private int pointsAmount = 0;
 
     public CubicBezier() {
         this.firstPoint = new Point(0, 0);
         this.secondPoint = new Point(1, 1);
-
-        setupPoints();
+        setPointsAmount(30);
     }
 
     public CubicBezier(int pointsAmount) {
-        this.firstPoint = new Point(0, 0);
-        this.secondPoint = new Point(1, 1);
-        this.pointsAmount = pointsAmount;
-
-        setupPoints();
+        this();
+        setPointsAmount(pointsAmount);
     }
 
     public CubicBezier(Point firstPoint, Point secondPoint) {
         this.firstPoint = firstPoint;
         this.secondPoint = secondPoint;
-
-        setupPoints();
+        setPointsAmount(30);
     }
 
     public CubicBezier(Point firstPoint, Point secondPoint, int pointsAmount) {
-        this.firstPoint = firstPoint;
-        this.secondPoint = secondPoint;
-        this.pointsAmount = pointsAmount;
-
-        setupPoints();
+        this(firstPoint, secondPoint);
+        setPointsAmount(pointsAmount);
     }
 
     public CubicBezier(CubicBezier bezier) {
         this.firstPoint = bezier.getFirstPoint();
         this.secondPoint = bezier.getSecondPoint();
+        setPointsAmount(30);
+    }
 
-        setupPoints();
+    public CubicBezier(CubicBezier bezier, int pointsAmount) {
+        this(bezier);
+        setPointsAmount(pointsAmount);
     }
 
     public CubicBezier(String str) {
@@ -63,8 +59,12 @@ public class CubicBezier extends AbstractBezier {
 
         this.firstPoint = new Point(splitted[0] + "," + splitted[1]);
         this.secondPoint = new Point(splitted[2] + "," + splitted[3]);
+        setPointsAmount(30);
+    }
 
-        setupPoints();
+    public CubicBezier(String str, int pointsAmount) {
+        this(str);
+        setPointsAmount(pointsAmount);
     }
 
     private void setupPoints() {
@@ -82,7 +82,7 @@ public class CubicBezier extends AbstractBezier {
         points.add(new Point(1.0, 0.0));
     }
 
-    public Point getPoint(double time) {
+    private Point getPoint(double time) {
         if (firstPoint == null || secondPoint == null)
             throw new NullPointerException("firstPoint or secondPoint is null");
 
@@ -102,7 +102,7 @@ public class CubicBezier extends AbstractBezier {
         );
     }
 
-    public AbstractMap.Entry<Point, Point> getBoundingPoints(double x) {
+    private AbstractMap.Entry<Point, Point> getBoundingPoints(double x) {
         if (points.isEmpty()) return new AbstractMap.SimpleEntry<>(new Point(0.0, 0.0), new Point(0.0, 0.0));
 
         Point lowerPoint = points.get(0);

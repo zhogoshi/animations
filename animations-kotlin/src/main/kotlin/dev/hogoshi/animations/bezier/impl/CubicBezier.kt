@@ -18,9 +18,9 @@ class CubicBezier : AbstractBezier {
     private val firstPoint: Point?
     private val secondPoint: Point?
     private val points: MutableList<Point> = ArrayList()
-    var pointsAmount = 30
+    var pointsAmount = 0
         set(value) {
-            if(field != value) return
+            if(field == value) return
 
             field = value
             setupPoints()
@@ -30,30 +30,27 @@ class CubicBezier : AbstractBezier {
         this.firstPoint = Point(0.0, 0.0)
         this.secondPoint = Point(1.0, 1.0)
         this.pointsAmount = pointsAmount
-
-        setupPoints()
     }
 
     constructor(firstPoint: Point?, secondPoint: Point?, pointsAmount: Int = 30) {
-        this.pointsAmount = pointsAmount
         this.firstPoint = firstPoint
         this.secondPoint = secondPoint
+        this.pointsAmount = pointsAmount
     }
 
     constructor(bezier: CubicBezier, pointsAmount: Int = 30) {
-        this.pointsAmount = pointsAmount
         this.firstPoint = bezier.getFirstPoint()
         this.secondPoint = bezier.getSecondPoint()
+        this.pointsAmount = pointsAmount
     }
 
-    constructor(str: String) {
+    constructor(str: String, pointsAmount: Int = 30) {
         val splitted = str.replace(" ", "").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         require(splitted.size == 4) { "Couldn't parse $str, please follow this format: x1,y1,x2,y2" }
 
         this.firstPoint = Point(splitted[0] + "," + splitted[1])
         this.secondPoint = Point(splitted[2] + "," + splitted[3])
-
-        setupPoints()
+        this.pointsAmount = pointsAmount
     }
 
     private fun setupPoints() {
@@ -71,7 +68,7 @@ class CubicBezier : AbstractBezier {
         points.add(Point(1.0, 0.0))
     }
 
-    fun getPoint(time: Double): Point {
+    private fun getPoint(time: Double): Point {
         if (firstPoint == null || secondPoint == null) throw NullPointerException("firstPoint or secondPoint is null")
 
         val controlPoint1 = firstPoint.copy()
@@ -88,7 +85,7 @@ class CubicBezier : AbstractBezier {
         )
     }
 
-    fun getBoundingPoints(x: Double): Pair<Point, Point> {
+    private fun getBoundingPoints(x: Double): Pair<Point, Point> {
         if (points.isEmpty()) return Point(0.0, 0.0) to Point(0.0, 0.0)
 
         var lowerPoint = points[0]
