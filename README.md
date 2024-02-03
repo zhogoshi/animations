@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.zhogoshi.animations:animations-kotlin:5.6")
+    implementation("com.github.zhogoshi.animations:animations-kotlin:5.7")
 }
 ```
 
@@ -36,7 +36,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.zhogoshi.animations:animations-java:5.6")
+    implementation("com.github.zhogoshi.animations:animations-java:5.7")
 }
 ```
 
@@ -57,7 +57,7 @@ dependencies {
     <dependency>
         <groupId>com.github.zhogoshi.animations</groupId>
         <artifactId>animations-kotlin</artifactId>
-        <version>5.6</version>
+        <version>5.7</version>
     </dependency>
 </dependencies>
 ```
@@ -77,7 +77,7 @@ dependencies {
     <dependency>
         <groupId>com.github.zhogoshi.animations</groupId>
         <artifactId>animations-java</artifactId>
-        <version>5.6</version>
+        <version>5.7</version>
     </dependency>
 </dependencies>
 ```

@@ -15,9 +15,13 @@ import kotlin.math.pow
  */
 class CubicBezier : AbstractBezier {
 
-    private val firstPoint: Point?
-    private val secondPoint: Point?
+    val firstPoint: Point?
+        get() = field?.copy()
+    val secondPoint: Point?
+        get() = field?.copy()
+
     private val points: MutableList<Point> = ArrayList()
+
     var pointsAmount = 0
         set(value) {
             if(field == value) return
@@ -39,8 +43,8 @@ class CubicBezier : AbstractBezier {
     }
 
     constructor(bezier: CubicBezier, pointsAmount: Int = 30) {
-        this.firstPoint = bezier.getFirstPoint()
-        this.secondPoint = bezier.getSecondPoint()
+        this.firstPoint = bezier.firstPoint
+        this.secondPoint = bezier.secondPoint
         this.pointsAmount = pointsAmount
     }
 
@@ -71,8 +75,8 @@ class CubicBezier : AbstractBezier {
     private fun getPoint(time: Double): Point {
         if (firstPoint == null || secondPoint == null) throw NullPointerException("firstPoint or secondPoint is null")
 
-        val controlPoint1 = firstPoint.copy()
-        val controlPoint2 = secondPoint.copy()
+        val controlPoint1 = firstPoint!!
+        val controlPoint2 = secondPoint!!
 
         val oneMinusT = 1.0 - time
         return Point(
@@ -121,14 +125,6 @@ class CubicBezier : AbstractBezier {
                 ((upperPoint.y - lowerPoint.y) / (upperPoint.x - lowerPoint.x)) * (time - lowerPoint.x) + lowerPoint.y
             return 1.0 - interpolatedY
         }
-    }
-
-    private fun getFirstPoint(): Point {
-        return firstPoint!!.copy()
-    }
-
-    private fun getSecondPoint(): Point {
-        return secondPoint!!.copy()
     }
 
     fun getPoints(): List<Point> {
