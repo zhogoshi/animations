@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.zhogoshi.animations:animations-kotlin:5.4")
+    implementation("com.github.zhogoshi.animations:animations-kotlin:5.5")
 }
 ```
 
@@ -36,7 +36,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.zhogoshi.animations:animations-java:5.4")
+    implementation("com.github.zhogoshi.animations:animations-java:5.5")
 }
 ```
 
