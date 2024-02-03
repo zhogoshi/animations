@@ -23,6 +23,20 @@ public class Point {
         this.y = point.y;
     }
 
+    public Point(String str) {
+        str = str.replace(" ", "");
+        if (!str.contains(",")) return;
+
+        String[] splitted = str.split(",");
+        if (splitted.length <= 1) return;
+
+        String first = splitted[0];
+        String second = splitted[1];
+
+        this.x = Double.parseDouble(first.trim().replace("\uFEFF", ""));
+        this.y = Double.parseDouble(second.trim().replace("\uFEFF", ""));
+    }
+
     public Point copy() {
         return new Point(this);
     }

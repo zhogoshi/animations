@@ -11,6 +11,21 @@ data class Point(
 
     constructor(point: Point) : this(point.x, point.y)
 
+    constructor(str: String) : this() {
+        val str = str.replace(" ", "")
+        if (!str.contains(",")) return
+
+        val splitted = str.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        if (splitted.size <= 1) return
+
+        try {
+            this.x = splitted[0].trim { it <= ' ' }.replace("\uFEFF", "").toDouble()
+            this.y = splitted[1].trim { it <= ' ' }.replace("\uFEFF", "").toDouble()
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
     fun copy(): Point {
         return Point(this)
     }

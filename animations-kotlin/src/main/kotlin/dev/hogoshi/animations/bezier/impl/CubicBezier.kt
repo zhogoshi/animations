@@ -18,20 +18,30 @@ class CubicBezier : AbstractBezier {
     private val firstPoint: Point?
     private val secondPoint: Point?
     private val points: MutableList<Point> = ArrayList()
+    var pointsAmount = 30
+        set(value) {
+            if(field != value) return
 
-    constructor() {
+            field = value
+            setupPoints()
+        }
+
+    constructor(pointsAmount: Int = 30) {
         this.firstPoint = Point(0.0, 0.0)
         this.secondPoint = Point(1.0, 1.0)
+        this.pointsAmount = pointsAmount
 
         setupPoints()
     }
 
-    constructor(firstPoint: Point?, secondPoint: Point?) {
+    constructor(firstPoint: Point?, secondPoint: Point?, pointsAmount: Int = 30) {
+        this.pointsAmount = pointsAmount
         this.firstPoint = firstPoint
         this.secondPoint = secondPoint
     }
 
-    constructor(bezier: CubicBezier) {
+    constructor(bezier: CubicBezier, pointsAmount: Int = 30) {
+        this.pointsAmount = pointsAmount
         this.firstPoint = bezier.getFirstPoint()
         this.secondPoint = bezier.getSecondPoint()
     }
@@ -40,11 +50,8 @@ class CubicBezier : AbstractBezier {
         val splitted = str.replace(" ", "").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         require(splitted.size == 4) { "Couldn't parse $str, please follow this format: x1,y1,x2,y2" }
 
-        val firstPoint = extractPoint(splitted[0] + "," + splitted[1])
-        val secondPoint = extractPoint(splitted[2] + "," + splitted[3])
-
-        if (firstPoint != null) this.firstPoint = firstPoint else this.firstPoint = Point(0.0, 0.0)
-        if (secondPoint != null) this.secondPoint = secondPoint else this.secondPoint = Point(1.0, 1.0)
+        this.firstPoint = Point(splitted[0] + "," + splitted[1])
+        this.secondPoint = Point(splitted[2] + "," + splitted[3])
 
         setupPoints()
     }
@@ -53,7 +60,7 @@ class CubicBezier : AbstractBezier {
         if (firstPoint == null || secondPoint == null) return
         points.clear()
 
-        val increment = 1.0 / 30.0
+        val increment = 1.0 / pointsAmount
         var t = 0.0
         while (t <= 1.0) {
             val point = getPoint(t)
@@ -64,25 +71,7 @@ class CubicBezier : AbstractBezier {
         points.add(Point(1.0, 0.0))
     }
 
-    private fun extractPoint(str: String): Point? {
-        if (!str.contains(",")) return null
-
-        val splitted = str.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        if (splitted.size <= 1) return null
-
-        val first = splitted[0]
-        val second = splitted[1]
-
-        try {
-            val firstDouble = first.trim { it <= ' ' }.replace("\uFEFF", "").toDouble()
-            val secondDouble = second.trim { it <= ' ' }.replace("\uFEFF", "").toDouble()
-            return Point(firstDouble, secondDouble)
-        } catch (e: Exception) {
-            return null
-        }
-    }
-
-    private fun getPoint(time: Double): Point {
+    fun getPoint(time: Double): Point {
         if (firstPoint == null || secondPoint == null) throw NullPointerException("firstPoint or secondPoint is null")
 
         val controlPoint1 = firstPoint.copy()
@@ -99,8 +88,8 @@ class CubicBezier : AbstractBezier {
         )
     }
 
-    private fun getBoundingPoints(x: Double): Map.Entry<Point, Point> {
-        if (points.isEmpty()) return AbstractMap.SimpleEntry(Point(0.0, 0.0), Point(0.0, 0.0))
+    fun getBoundingPoints(x: Double): Pair<Point, Point> {
+        if (points.isEmpty()) return Point(0.0, 0.0) to Point(0.0, 0.0)
 
         var lowerPoint = points[0]
         var upperPoint = points[points.size - 1]
@@ -117,7 +106,7 @@ class CubicBezier : AbstractBezier {
         if (upperPoint.x < x) upperPoint = lowerPoint
         if (lowerPoint.x > x) lowerPoint = upperPoint
 
-        return AbstractMap.SimpleEntry(lowerPoint, upperPoint)
+        return lowerPoint to upperPoint
     }
 
     override fun ease(time: Double): Double {
@@ -125,8 +114,8 @@ class CubicBezier : AbstractBezier {
 
         val points = getBoundingPoints(time)
 
-        val lowerPoint = points.key
-        val upperPoint = points.value
+        val lowerPoint = points.first
+        val upperPoint = points.second
 
         if (lowerPoint == upperPoint) {
             return 1.0 - lowerPoint.y
