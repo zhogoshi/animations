@@ -2,7 +2,6 @@ package dev.hogoshi.animations.easing.bezier;
 
 import dev.hogoshi.animations.easing.bezier.implementation.CubicBezier;
 import dev.hogoshi.animations.easing.bezier.implementation.LinearBezier;
-import dev.hogoshi.animations.easing.bezier.implementation.QuadBezier;
 
 /**
  * Collection of predefined Bezier curve-based easing functions.
@@ -13,13 +12,6 @@ public class Beziers {
      * Linear Bezier curve (no easing).
      */
     public static final LinearBezier LINEAR = new LinearBezier();
-
-    /**
-     * Quadratic Bezier curves for basic easing.
-     */
-    public static final QuadBezier EASE_IN = new QuadBezier(0.42, 0.0);
-    public static final QuadBezier EASE_OUT = new QuadBezier(0.0, 0.58);
-    public static final QuadBezier EASE_BOTH = new QuadBezier(0.42, 0.58);
 
     /**
      * Cubic Bezier curves for sine-based easing.

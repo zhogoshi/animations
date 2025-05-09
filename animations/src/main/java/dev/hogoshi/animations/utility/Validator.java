@@ -71,25 +71,18 @@ public final class Validator {
         }
     }
 
-    /**
-     * Validates a list of keyframes for animation.
-     * Checks that the list is not empty, contains no null elements,
-     * and that keyframes are in ascending time order.
-     *
-     * @param keyFrames the list of keyframes to validate
-     * @throws IllegalArgumentException if any validation fails
-     */
-    public static void requireValidKeyFrames(@NotNull List<KeyFrame> keyFrames) {
-        requireNonEmpty(keyFrames, "KeyFrames list cannot be empty");
-        for (int i = 0; i < keyFrames.size(); i++) {
-            KeyFrame frame = keyFrames.get(i);
-            requireNonNull(frame, "KeyFrame at index " + i + " cannot be null");
-            if (i > 0) {
-                KeyFrame prevFrame = keyFrames.get(i - 1);
-                if (frame.getTime() <= prevFrame.getTime()) {
-                    throw new IllegalArgumentException("KeyFrames must be in ascending time order");
-                }
+    public static void requireValidKeyFrames(@NotNull List<KeyFrame> keyframes) {
+        requireNonNull(keyframes, "Keyframes cannot be null");
+        requireNonEmpty(keyframes, "Keyframes cannot be empty");
+
+        double lastTime = -1;
+        for (KeyFrame keyframe : keyframes) {
+            requireNonNull(keyframe, "Keyframe cannot be null");
+            requireInRange(keyframe.getTime(), 0.0, 1.0, "Keyframe time must be between 0 and 1");
+            if (keyframe.getTime() <= lastTime) {
+                throw new IllegalArgumentException("Keyframes must be in ascending time order");
             }
+            lastTime = keyframe.getTime();
         }
     }
 }

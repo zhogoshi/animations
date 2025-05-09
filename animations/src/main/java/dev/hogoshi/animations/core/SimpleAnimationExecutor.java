@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
  * Supports both single-threaded and parallel processing modes.
  */
 @Getter
-@Accessors(chain = true)
+@Accessors(chain = true, fluent = true)
 public class SimpleAnimationExecutor implements AnimationExecutor {
     /**
      * List of currently running animations.
@@ -46,11 +46,17 @@ public class SimpleAnimationExecutor implements AnimationExecutor {
     /**
      * Enables parallel processing of animations using a thread pool.
      *
+     * @param enabled whether to enable parallel processing
      * @return this executor instance for method chaining
      */
-    public @NotNull SimpleAnimationExecutor enableParallelProcessing() {
-        this.parallelProcessing = true;
-        this.executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    public @NotNull SimpleAnimationExecutor parallelProcessing(boolean enabled) {
+        this.parallelProcessing = enabled;
+        if (enabled) {
+            this.executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        } else if (this.executorService != null) {
+            this.executorService.shutdown();
+            this.executorService = null;
+        }
         return this;
     }
 

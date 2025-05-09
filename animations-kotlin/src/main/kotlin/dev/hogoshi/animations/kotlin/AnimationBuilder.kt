@@ -4,7 +4,6 @@ import dev.hogoshi.animations.core.Animation
 import dev.hogoshi.animations.core.AnimationExecutor
 import dev.hogoshi.animations.easing.Easing
 import dev.hogoshi.animations.model.AnimationConfig
-import dev.hogoshi.animations.model.KeyFrame
 import java.util.function.Consumer
 
 /**
@@ -13,7 +12,8 @@ import java.util.function.Consumer
  */
 class AnimationBuilder {
     private var config = AnimationConfig()
-    private val keyFrames = mutableListOf<KeyFrame>()
+    private var fromValue: Double = 0.0
+    private var valueTo: Double = 0.0
     private var onUpdate: Consumer<Double>? = null
     private var onComplete: Runnable? = null
 
@@ -35,17 +35,6 @@ class AnimationBuilder {
      */
     fun config(config: AnimationConfig) {
         this.config = config
-    }
-
-    /**
-     * Defines keyframes for the animation using a DSL block.
-     *
-     * @param block keyframes block that defines time-value pairs
-     */
-    fun keyframes(block: KeyFramesBuilder.() -> Unit) {
-        val keyFramesBuilder = KeyFramesBuilder()
-        keyFramesBuilder.block()
-        keyFrames.addAll(keyFramesBuilder.build())
     }
 
     /**
@@ -72,7 +61,7 @@ class AnimationBuilder {
      * @return a new Animation instance
      */
     fun build(): Animation {
-        val animation = Animation(config, keyFrames)
+        val animation = Animation(config, fromValue, valueTo)
         onUpdate?.let { animation.onUpdate(it) }
         onComplete?.let { animation.onComplete(it) }
         return animation
@@ -85,6 +74,16 @@ class AnimationBuilder {
      */
     fun execute(executor: AnimationExecutor) {
         executor.execute(build())
+    }
+
+    fun from(value: Double): AnimationBuilder {
+        fromValue = value
+        return this
+    }
+
+    fun to(value: Double): AnimationBuilder {
+        valueTo = value
+        return this
     }
 }
 
@@ -134,33 +133,6 @@ class ConfigBuilder {
             .delay(delay)
             .easing(easing)
     }
-}
-
-/**
- * Builder class for creating animation keyframes.
- */
-class KeyFramesBuilder {
-    private val frames = mutableListOf<KeyFrame>()
-
-    /**
-     * Adds a keyframe at the specified time with the given value.
-     *
-     * @param time time point in the animation (0.0 to 1.0)
-     * @param value value at this keyframe
-     */
-    fun keyframe(time: Double, value: Double) {
-        frames.add(KeyFrame().apply {
-            this.time = time
-            this.value = value
-        })
-    }
-
-    /**
-     * Builds and returns the list of keyframes.
-     *
-     * @return list of configured keyframes
-     */
-    fun build(): List<KeyFrame> = frames
 }
 
 /**

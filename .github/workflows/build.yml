@@ -116,18 +116,26 @@ jobs:
           draft: false
           prerelease: false
           body: |
-            ## Initial Release
+            ## Animation System Updates
+            
+            ### Non-code changes
+            - Added wiki page
+            - Removed docs from readme
+            - Removed gradle groovy implementation from readme
 
             ### Core Module
-            - Initial project setup with Java 1.8
-            - Added Lombok for reducing boilerplate code
-            - Configured JetBrains annotations
-            - Set up JUnit 5 and Mockito for testing
-            - Basic Gradle configuration with proper dependency management
+            - Simplified animation system by removing keyframes complexity
+            - Added support for direct value-to-value animations
+            - Implemented smooth interpolation between values
+            - Added support for custom easing functions between keyframes
+            - Enhanced elastic animations with proper easing functions
 
             ### Kotlin DSL Module
-            - Initial project setup with Kotlin
-            - Added dependency on core module
+            - Added support for keyframe-based animations with custom easing
+            - Implemented DSL for creating complex animations
+            - Added support for elastic animations with ELASTIC_BOTH easing
+            - Enhanced animation builder with from/to value support
+            - Improved animation smoothness and natural movement
 
       - name: Upload Core JAR to Release
         uses: actions/upload-release-asset@v1
