@@ -1,0 +1,24 @@
+name: Pull Request Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          validate-wrappers: true
+      - name: Run Tests
+        run: ./gradlew build
+      - name: Compile Test Snippets
+        run: ./gradlew test -Pcompile-test-snippets
+      - name: Verify Publishing
+        run: ./gradlew publishToMavenLocal 

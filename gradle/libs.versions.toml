@@ -1,0 +1,13 @@
+[versions]
+kotlin = "2.1.10"
+lombok = "1.18.38"
+jetbrains-annotations = "24.1.0"
+jreleaser = "1.18.0"
+
+[libraries]
+lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
+jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+jreleaser = { id = "org.jreleaser", version.ref = "jreleaser" }

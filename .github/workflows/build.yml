@@ -1,0 +1,214 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build
+        run: ./gradlew build
+
+      - name: Upload Java artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-artifacts
+          path: animations/build/libs/
+
+      - name: Upload Kotlin artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: kotlin-artifacts
+          path: animations-kotlin/build/libs/
+
+  test:
+    name: Test
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Download Java artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: java-artifacts
+          path: animations/build/libs/
+
+      - name: Download Kotlin artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: kotlin-artifacts
+          path: animations-kotlin/build/libs/
+
+      - name: Run Tests
+        run: ./gradlew test
+
+  release:
+    name: Release
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Download Java artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: java-artifacts
+          path: animations/build/libs/
+
+      - name: Download Kotlin artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: kotlin-artifacts
+          path: animations-kotlin/build/libs/
+
+      - name: Make gradlew Executable
+        run: chmod +x ./gradlew
+
+      - name: Create JReleaser directories
+        run: |
+          mkdir -p animations/build/jreleaser
+          mkdir -p animations-kotlin/build/jreleaser
+
+      - name: Extract Version
+        id: extract_version
+        run: |
+          version=$(./gradlew properties -q | grep "^version: " | awk '{print $2}')
+          echo "PROJECT_VERSION=$version" >> $GITHUB_ENV
+
+      - name: Create Github Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.PROJECT_VERSION }}
+          release_name: Release v${{ env.PROJECT_VERSION }}
+          draft: false
+          prerelease: false
+          body: |
+            ## Initial Release
+
+            ### Core Module
+            - Initial project setup with Java 1.8
+            - Added Lombok for reducing boilerplate code
+            - Configured JetBrains annotations
+            - Set up JUnit 5 and Mockito for testing
+            - Basic Gradle configuration with proper dependency management
+
+            ### Kotlin DSL Module
+            - Initial project setup with Kotlin
+            - Added dependency on core module
+
+      - name: Upload Core JAR to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: animations/build/libs/animations-${{ env.PROJECT_VERSION }}.jar
+          asset_name: animations-${{ env.PROJECT_VERSION }}.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload Kotlin DSL JAR to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: animations-kotlin/build/libs/animations-kotlin-${{ env.PROJECT_VERSION }}.jar
+          asset_name: animations-kotlin-${{ env.PROJECT_VERSION }}.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload Core javadocs to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: animations/build/libs/animations-${{ env.PROJECT_VERSION }}-javadoc.jar
+          asset_name: animations-${{ env.PROJECT_VERSION }}-javadoc.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload Kotlin DSL javadocs to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: animations-kotlin/build/libs/animations-kotlin-${{ env.PROJECT_VERSION }}-javadoc.jar
+          asset_name: animations-kotlin-${{ env.PROJECT_VERSION }}-javadoc.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload Core sources to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: animations/build/libs/animations-${{ env.PROJECT_VERSION }}-sources.jar
+          asset_name: animations-${{ env.PROJECT_VERSION }}-sources.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload Kotlin DSL sources to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: animations-kotlin/build/libs/animations-kotlin-${{ env.PROJECT_VERSION }}-sources.jar
+          asset_name: animations-kotlin-${{ env.PROJECT_VERSION }}-sources.jar
+          asset_content_type: application/java-archive
+
+      - name: Publish to Maven Central
+        uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1
+        with:
+          arguments: --no-daemon -i animations:jreleaserConfig animations:build animations:test animations:publish animations-kotlin:jreleaserConfig animations-kotlin:build animations-kotlin:test animations-kotlin:publish
+        env:
+          JRELEASER_GPG_SECRET_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
+          JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.JRELEASER_GITHUB_TOKEN }}
+          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME }}
+          JRELEASER_MAVENCENTRAL_TOKEN: ${{ secrets.JRELEASER_MAVENCENTRAL_SONATYPE_TOKEN }}
+          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
+
+      - name: Complete Release
+        uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1
+        with:
+          arguments: --no-daemon -i animations:jreleaserFullRelease animations-kotlin:jreleaserFullRelease
+        env:
+          JRELEASER_GPG_SECRET_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
+          JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.JRELEASER_GITHUB_TOKEN }}
+          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME }}
+          JRELEASER_MAVENCENTRAL_TOKEN: ${{ secrets.JRELEASER_MAVENCENTRAL_SONATYPE_TOKEN }}
+          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
