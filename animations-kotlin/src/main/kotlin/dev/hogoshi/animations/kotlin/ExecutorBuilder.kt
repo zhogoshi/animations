@@ -9,26 +9,6 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 /**
- * Predefined animation executors for common use cases.
- */
-object Executors {
-    /**
-     * Executor that uses Swing's event dispatch thread for animation updates.
-     */
-    val SWING = SwingAnimationExecutor()
-
-    /**
-     * Basic single-threaded animation executor.
-     */
-    val SIMPLE = SimpleAnimationExecutor()
-
-    /**
-     * Multi-threaded animation executor that processes animations in parallel.
-     */
-    val PARALLEL = SimpleAnimationExecutor().enableParallelProcessing()
-}
-
-/**
  * Builder class for creating custom animation executors.
  * Allows configuration of update callbacks, parallel processing, and FPS settings.
  */

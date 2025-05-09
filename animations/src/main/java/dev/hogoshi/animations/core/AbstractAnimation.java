@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import dev.hogoshi.animations.model.AnimationConfig;
-import dev.hogoshi.animations.model.KeyFrame;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -21,11 +20,6 @@ public abstract class AbstractAnimation {
      * Configuration for the animation.
      */
     protected AnimationConfig config;
-
-    /**
-     * List of keyframes defining the animation sequence.
-     */
-    protected List<KeyFrame> keyFrames;
 
     /**
      * Callback function called on each animation update.

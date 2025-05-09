@@ -1,13 +1,11 @@
 package dev.hogoshi.animations.core;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import dev.hogoshi.animations.model.AnimationConfig;
-import dev.hogoshi.animations.model.KeyFrame;
 import dev.hogoshi.animations.utility.Validator;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -25,6 +23,11 @@ public class Animation extends AbstractAnimation {
     private double currentValue;
 
     /**
+     * Start value of the animation.
+     */
+    private double fromValue;
+
+    /**
      * Whether the animation has started playing.
      */
     private boolean hasStarted = false;
@@ -34,19 +37,22 @@ public class Animation extends AbstractAnimation {
      */
     private double elapsedTime = 0;
 
+    private final double valueTo;
+
     /**
      * Creates a new animation with the specified configuration and keyframes.
      *
      * @param config    animation configuration
-     * @param keyFrames list of keyframes defining the animation sequence
-     * @throws IllegalArgumentException if config is null or keyframes are invalid
+     * @param fromValue the starting value of the animation
+     * @param valueTo   the target value of the animation
+     * @throws IllegalArgumentException if config is null or valueTo is invalid
      */
-    public Animation(@NotNull AnimationConfig config, @NotNull List<KeyFrame> keyFrames) {
+    public Animation(@NotNull AnimationConfig config, double fromValue, double valueTo) {
         Validator.requireNonNull(config, "Config cannot be null");
-        Validator.requireValidKeyFrames(keyFrames);
         this.config = config;
-        this.keyFrames = keyFrames;
-        this.currentValue = keyFrames.get(0).getValue();
+        this.fromValue = fromValue;
+        this.currentValue = fromValue;
+        this.valueTo = valueTo;
         this.delay = config.delay();
     }
 
@@ -66,7 +72,7 @@ public class Animation extends AbstractAnimation {
             if (delay <= 0) {
                 hasStarted = true;
                 isRunning = true;
-                currentValue = keyFrames.get(0).getValue();
+                currentValue = valueTo;
                 if (onUpdate != null) {
                     onUpdate.accept(currentValue);
                 }
@@ -77,7 +83,7 @@ public class Animation extends AbstractAnimation {
         if (!hasStarted) {
             hasStarted = true;
             isRunning = true;
-            currentValue = keyFrames.get(0).getValue();
+            currentValue = valueTo;
             if (onUpdate != null) {
                 onUpdate.accept(currentValue);
             }
@@ -93,7 +99,7 @@ public class Animation extends AbstractAnimation {
         if (currentTime >= 1.0) {
             currentTime = 1.0;
             isRunning = false;
-            currentValue = keyFrames.get(keyFrames.size() - 1).getValue();
+            currentValue = valueTo;
             if (onUpdate != null) {
                 onUpdate.accept(currentValue);
             }
@@ -120,9 +126,7 @@ public class Animation extends AbstractAnimation {
      * @return interpolated value
      */
     private double getNewValue(double easedTime) {
-        KeyFrame startFrame = keyFrames.get(0);
-        KeyFrame endFrame = keyFrames.get(keyFrames.size() - 1);
-        return startFrame.getValue() + (endFrame.getValue() - startFrame.getValue()) * easedTime;
+        return fromValue + (valueTo - fromValue) * easedTime;
     }
 
     /**
@@ -144,7 +148,7 @@ public class Animation extends AbstractAnimation {
         elapsedTime = 0;
         isRunning = false;
         hasStarted = false;
-        currentValue = keyFrames.get(0).getValue();
+        currentValue = fromValue;
         delay = config.delay();
     }
 
@@ -178,5 +182,9 @@ public class Animation extends AbstractAnimation {
             isRunning = false;
             if (onComplete != null) onComplete.run();
         }
+    }
+
+    public double getValueTo() {
+        return valueTo;
     }
 }
