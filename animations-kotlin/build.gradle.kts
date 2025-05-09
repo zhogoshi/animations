@@ -10,7 +10,7 @@ dependencies {
 }
 
 tasks.withType<KotlinCompile> {
-    compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
+    compilerOptions.jvmTarget.set(JvmTarget.JVM_1_8)
 }
 
 tasks.test {
