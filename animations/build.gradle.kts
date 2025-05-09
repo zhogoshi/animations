@@ -10,9 +10,9 @@ dependencies {
     testCompileOnly(libs.lombok)
     testAnnotationProcessor(libs.lombok)
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
-    testImplementation("org.mockito:mockito-core:5.3.1")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.3.1")
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.junit.jupiter)
 }
 
 tasks.test {
