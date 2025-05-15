@@ -17,6 +17,14 @@ public class Executors {
      * Multi-threaded animation executor that processes animations in parallel.
      */
     public static final SimpleAnimationExecutor PARALLEL = new SimpleAnimationExecutor().parallelProcessing(true);
+    /**
+     * Render animation executor that you should finish (call update method inside of frame rendering).
+     */
+    public static final SimpleAnimationExecutor RENDER = new RenderAnimationExecutor();
+    /**
+     * Render multi-threaded animation executor that you should finish (call update method inside of frame rendering).
+     */
+    public static final SimpleAnimationExecutor RENDER_PARALLEL = new RenderAnimationExecutor().parallelProcessing(true);
 
     private Executors() {}
 

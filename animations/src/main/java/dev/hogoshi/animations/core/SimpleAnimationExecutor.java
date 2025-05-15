@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 /**
- * Simple implementation of AnimationExecutor that runs animations in a dedicated thread.
+ * Simple implementation of AnimationExecutor that runs animations in a dedicated thread if parallel processing enabled.
  * Supports both single-threaded and parallel processing modes.
  */
 @Getter
@@ -21,27 +21,27 @@ public class SimpleAnimationExecutor implements AnimationExecutor {
     /**
      * List of currently running animations.
      */
-    private final List<AbstractAnimation> animations = new ArrayList<>();
+    protected final List<AbstractAnimation> animations = new ArrayList<>();
 
     /**
      * Whether animations should be processed in parallel.
      */
-    private boolean parallelProcessing = false;
+    protected boolean parallelProcessing = false;
 
     /**
      * Thread pool for parallel animation processing.
      */
-    private ExecutorService executorService;
+    protected ExecutorService executorService;
 
     /**
      * Whether the executor is currently running.
      */
-    private boolean isRunning = false;
+    protected boolean isRunning = false;
 
     /**
      * Timestamp of the last animation update.
      */
-    private long lastUpdateTime;
+    protected long lastUpdateTime;
 
     /**
      * Enables parallel processing of animations using a thread pool.
@@ -78,7 +78,7 @@ public class SimpleAnimationExecutor implements AnimationExecutor {
     /**
      * Starts the animation loop in a dedicated thread.
      */
-    private void start() {
+    protected void start() {
         isRunning = true;
         lastUpdateTime = System.nanoTime();
 
