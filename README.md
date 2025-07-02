@@ -16,9 +16,9 @@ repositories {
 }
 
 dependencies {
-    implementation("dev.hogoshi.animations:animations:1.1.1")
+    implementation("dev.hogoshi.animations:animations:X.X.X")
     // or kotlin one
-    implementation("dev.hogoshi.animations:animations-kotlin:1.1.1")
+    implementation("dev.hogoshi.animations:animations-kotlin:X.X.X")
 }
 ```
 
@@ -29,19 +29,19 @@ dependencies {
     <dependency>
         <groupId>dev.hogoshi.animations</groupId>
         <artifactId>animations</artifactId>
-        <version>1.1.1</version>
+        <version>X.X.X</version>
     </dependency>
     <!-- or kotlin one
     <dependency>
         <groupId>com.github.hogoshi</groupId>
         <artifactId>animations-kotlin</artifactId>
-        <version>1.1.1</version>
+        <version>X.X.X</version>
     </dependency>
     -->
 </dependencies>
 ```
 
-> Note: Replace `1.1.1` with the desired version tag from the [releases page](https://github.com/zhogoshi/animations/releases).
+> Note: Replace `X.X.X` with the desired version tag from the [releases page](https://github.com/zhogoshi/animations/releases).
 
 > Another Note: Versions under `1.0.2` are compatible only with 17+ Java, versions higher supports 8+ Java
 
